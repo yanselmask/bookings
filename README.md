@@ -298,7 +298,7 @@ Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
 The following support channels are available at your fingertips:
 
 - [Chat on Slack](https://bit.ly/Yanselmask-slack)
-- [Help on Email](mailto:help@Yanselmask.com)
+- [Help on Email](mailto:help@yanselmask.com)
 - [Follow on Twitter](https://twitter.com/Yanselmask)
 
 
