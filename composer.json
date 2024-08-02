@@ -1,0 +1,75 @@
+{
+    "name": "yanselmask/bookings",
+    "description": "Yanselmask Bookings is a generic resource booking system for Laravel, with the required tools to run your SAAS like services efficiently. It has a simple architecture, with powerful underlying to afford solid platform for your business.",
+    "type": "library",
+    "keywords": [
+        "cost",
+        "usage",
+        "yanselmask",
+        "booking",
+        "resource",
+        "schedules",
+        "database",
+        "laravel",
+        "price",
+        "rates"
+    ],
+    "license": "MIT",
+    "homepage": "https://yanselmask.com",
+    "support": {
+        "email": "info@yanselmask.com",
+        "issues": "https://github.com/yanselmask/bookings/issues",
+        "source": "https://github.com/yanselmask/bookings",
+        "docs": "https://github.com/yanselmask/bookings/blob/master/README.md"
+    },
+    "authors": [
+        {
+            "name": "Yanselmask, Inc.",
+            "homepage": "https://yanselmask.com",
+            "email": "info@yanselmask.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0.0",
+        "illuminate/console": "^10.0.0|^11.0.0",
+        "illuminate/database": "^10.0.0|^11.0.0",
+        "illuminate/support": "^10.0.0|^11.0.0",
+        "rinvex/laravel-support": "*",
+        "spatie/eloquent-sortable": "^4.0.0",
+        "spatie/laravel-schemaless-attributes": "^2.3.0",
+        "spatie/laravel-sluggable": "^3.4.2",
+        "spatie/laravel-translatable": "^6.5.0"
+    },
+    "require-dev": {
+        "codedungeon/phpunit-result-printer": "^0.31.0",
+        "illuminate/container": "^9.0.0 || ^10.0.0",
+        "phpunit/phpunit": "^9.5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yanselmask\\Bookings\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Yanselmask\\Bookings\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "optimize-autoloader": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Yanselmask\\Bookings\\Providers\\BookingsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
