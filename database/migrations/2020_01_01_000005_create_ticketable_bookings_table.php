@@ -15,7 +15,7 @@ class CreateTicketableBookingsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('rinvex.bookings.tables.ticketable_bookings'), function (Blueprint $table) {
+        Schema::create(config('yanselmask.bookings.tables.ticketable_bookings'), function (Blueprint $table) {
             // Columns
             $table->increments('id');
             $table->integer('ticket_id')->unsigned();
@@ -38,6 +38,6 @@ class CreateTicketableBookingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('rinvex.bookings.tables.ticketable_bookings'));
+        Schema::dropIfExists(config('yanselmask.bookings.tables.ticketable_bookings'));
     }
 }

@@ -6,6 +6,7 @@ namespace Yanselmask\Bookings\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Rinvex\Support\Traits\ConsoleTools;
+use Illuminate\Database\Schema\Blueprint;
 use Yanselmask\Bookings\Console\Commands\MigrateCommand;
 use Yanselmask\Bookings\Console\Commands\PublishCommand;
 use Yanselmask\Bookings\Console\Commands\RollbackCommand;
@@ -32,6 +33,11 @@ class BookingsServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        Blueprint::macro('bookings', function () {
+            $this->integer('price')->default(0);
+            $this->string('unit')->default('day');
+        });
+
         $this->mergeConfigFrom(realpath(__DIR__.'/../../config/config.php'), 'yanselmask.bookings');
 
         if ($this->app->runningInConsole()) {
@@ -47,6 +53,7 @@ class BookingsServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Blueprint
         // Publish Resources
         $this->publishes([
             __DIR__.'/../config/config.php' => config_path('yanselmask-booking.php')
