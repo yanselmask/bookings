@@ -55,7 +55,7 @@ class BookingsServiceProvider extends ServiceProvider
 
         // Publish Resources
         $this->publishes([
-            __DIR__.'/../../config/config.php' => config_path('yanselmask-bookings.php'),
+            __DIR__.'/../../config/config.php' => config_path('bookings.php'),
         ], 'yanselmask-booking-configuration');
         $this->publishesMigrations([
             __DIR__.'/../../database/migrations/' => database_path('migrations')
