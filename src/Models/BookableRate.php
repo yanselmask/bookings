@@ -87,6 +87,15 @@ class BookableRate extends Model
         parent::__construct($attributes);
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::validating(function (self $bookableAvailability) {
+            dd($bookableAvailability);
+        });
+    }
+
     /**
      * Get the owning resource model.
      *
