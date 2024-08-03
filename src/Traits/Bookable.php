@@ -250,8 +250,8 @@ trait Bookable
             'bookable_id' => static::getKey(),
             'bookable_type' => static::getMorphClass(),
             'range' => $range,
-            'from' => (new Carbon($from))->toDateTimeString(),
-            'to' => (new Carbon($to))->toDateTimeString(),
+            'from' => $from,
+            'to' => $to,
             'percentage' => $percentage
         ]);
     }
