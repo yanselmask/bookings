@@ -13,7 +13,7 @@ use Rinvex\Support\Traits\ValidatingTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Yanselmask\Bookings\Traits\Ticketable as TicketableTrait;
 
-abstract class Ticketable extends Model
+class Ticketable extends Model
 {
     use HasSlug;
     use HasFactory;
