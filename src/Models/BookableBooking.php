@@ -119,18 +119,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
         static::validating(function (self $bookableAvailability) {
             if ($bookableAvailability->price === null) {
-                $data = $bookableAvailability->calculatePrice(
+                $formula = $bookableAvailability->calculatePrice(
                     $bookableAvailability->bookable,
                     $bookableAvailability->starts_at,
                     $bookableAvailability->ends_at
                 );
-                $bookableAvailability->currency = 'EUR';
-                $bookableAvailability->quantity = 1;
-                $bookableAvailability->formula = [$data['unit']];
-                $bookableAvailability->price = $data['total_price'];
-                $bookableAvailability->total_paid = 0;
-                return;
+                $price = $formula['total_price'];
+                $currency = $formula['currency'];
+            }else{
+                $price = $bookableAvailability->price;
+                $formula = $bookableAvailability->formula;
+                $currency = $bookableAvailability->currency;
             }
+            $bookableAvailability->currency = $currency;
+            $bookableAvailability->formula = $formula;
+            $bookableAvailability->price = $price;
+            $bookableAvailability->quantity = 1;
+            $bookableAvailability->total_paid = 0;
         });
     }
 
