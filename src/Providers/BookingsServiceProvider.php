@@ -50,7 +50,7 @@ class BookingsServiceProvider extends ServiceProvider
     {
         Blueprint::macro('bookings', function () {
             $this->integer('price')->default(0);
-            $this->string('unit')->default('day');
+            $this->string('unit')->default('month');
         });
 
         // Publish Resources

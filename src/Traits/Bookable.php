@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait Bookable
 {
-    use BookingScopes;
+    use BookingScopes, Ticketable;
 
     /**
      * Register a saved model event with the dispatcher.
