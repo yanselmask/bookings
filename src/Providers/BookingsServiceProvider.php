@@ -49,8 +49,11 @@ class BookingsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Blueprint::macro('bookings', function () {
-            $this->integer('price')->default(0);
-            $this->string('unit')->default('month');
+            $this->integer('price')->nullable();
+            $this->integer('base_cost')->nullable();
+            $this->integer('unit_cost')->nullable();
+            $this->string('unit')->nullable();
+            $this->string('currency', 3);
         });
 
         // Publish Resources

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yanselmask\Bookings\Traits;
 
 use Carbon\Carbon;
+use Cassandra\Date;
 use Illuminate\Database\Eloquent\Model;
 use Yanselmask\Bookings\Models\BookableBooking;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -191,6 +192,51 @@ trait Bookable
             'customer_type' => $customer->getMorphClass(),
             'starts_at' => (new Carbon($startsAt))->toDateTimeString(),
             'ends_at' => (new Carbon($endsAt))->toDateTimeString(),
+        ]);
+    }
+
+    /**
+     * Book the model for the given customer at the given dates with the given price.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $customer
+     * @param string                              $startsAt
+     * @param string                              $endsAt
+     *
+     * @return \Yanselmask\Bookings\Models\BookableBooking
+     */
+    public function newRate(int $percentage, string $operator, int $amount, $from = null, $to = null, int $priority = 10): BookableBooking
+    {
+        return $this->rates()->create([
+            'bookable_id' => static::getKey(),
+            'bookable_type' => static::getMorphClass(),
+            'range' => $percentage,
+            'from' => $from ? (new Carbon($from))->toDateTimeString() : null,
+            'to' => $to ? (new Carbon($to))->toDateTimeString() : null,
+            'base_cost' => '',
+            'unit_cost' => $amount,
+            'priority' => $priority,
+        ]);
+    }
+
+    /**
+     * Book the model for the given customer at the given dates with the given price.
+     *
+     * @param string $range
+     * @param string $from
+     * @param string $to
+     * @param int $percentage
+     *
+     * @return \Yanselmask\Bookings\Models\BookableBooking
+     */
+    public function newPrice($range, $from, $to, $percentage): BookableBooking
+    {
+        return $this->rates()->create([
+            'bookable_id' => static::getKey(),
+            'bookable_type' => static::getMorphClass(),
+            'range' => $range,
+            'from' => (new Carbon($from))->toDateTimeString(),
+            'to' => (new Carbon($to))->toDateTimeString(),
+            'base_cost' => $percentage
         ]);
     }
 }
