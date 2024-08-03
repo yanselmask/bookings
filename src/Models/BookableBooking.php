@@ -136,6 +136,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
             $bookableAvailability->price = $price;
             $bookableAvailability->quantity = 1;
             $bookableAvailability->total_paid = 0;
+            dd($bookableAvailability);
         });
     }
 
