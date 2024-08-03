@@ -154,6 +154,18 @@ trait Bookable
     }
 
     /**
+     * Get bookings by the given customer.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $customer
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function bookable(Model $customer): MorphMany
+    {
+        return $this->bookings()->where('customer_type', $customer->getMorphClass())->where('customer_id', $customer->getKey());
+    }
+
+    /**
      * The resource may have many availabilities.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany

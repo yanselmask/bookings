@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Rinvex\Support\Traits\HasTranslations;
 use Rinvex\Support\Traits\ValidatingTrait;
 use Spatie\EloquentSortable\SortableTrait;
-use Yanselmask\Bookings\Traits\Bookable as BookableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Yanselmask\Bookings\Traits\Bookable as BookableTrait;
 
 class Bookable extends Model implements Sortable
 {
