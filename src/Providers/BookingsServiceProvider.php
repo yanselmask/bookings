@@ -63,6 +63,7 @@ class BookingsServiceProvider extends ServiceProvider
         $this->publishesMigrations([
             __DIR__.'/../../database/migrations/' => database_path('migrations')
         ], 'yanselmask-booking-migrations');
+
         $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
     }
 }
