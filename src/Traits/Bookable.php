@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yanselmask\Bookings\Traits;
 
 use Carbon\Carbon;
-use Cassandra\Date;
 use Illuminate\Database\Eloquent\Model;
 use Yanselmask\Bookings\Models\BookableBooking;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -63,6 +62,16 @@ trait Bookable
     public static function getRateModel(): string
     {
         return config('yanselmask.bookings.models.bookable_rate');
+    }
+
+    /**
+     * Get the rate model name.
+     *
+     * @return string
+     */
+    public static function getPriceModel(): string
+    {
+        return config('yanselmask.bookings.models.bookable_price');
     }
 
     /**
@@ -175,6 +184,16 @@ trait Bookable
     }
 
     /**
+     * The resource may have many rates.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function prices(): MorphMany
+    {
+        return $this->morphMany(static::getPriceModel(), 'bookable', 'bookable_type', 'bookable_id');
+    }
+
+    /**
      * Book the model for the given customer at the given dates with the given price.
      *
      * @param \Illuminate\Database\Eloquent\Model $customer
@@ -198,23 +217,20 @@ trait Bookable
     /**
      * Book the model for the given customer at the given dates with the given price.
      *
-     * @param \Illuminate\Database\Eloquent\Model $customer
-     * @param string                              $startsAt
-     * @param string                              $endsAt
+     * @param string $percentage
+     * @param string $operator
+     * @param int $amount
      *
-     * @return \Yanselmask\Bookings\Models\BookableBooking
+     * @return \Yanselmask\Bookings\Models\BookableRate
      */
-    public function newRate(int $percentage, string $operator, int $amount, $from = null, $to = null, int $priority = 10): BookableBooking
+    public function newRate(int $percentage, string $operator, int $amount): \Yanselmask\Bookings\Models\BookableRate
     {
         return $this->rates()->create([
             'bookable_id' => static::getKey(),
             'bookable_type' => static::getMorphClass(),
-            'range' => $percentage,
-            'from' => $from ? (new Carbon($from))->toDateTimeString() : null,
-            'to' => $to ? (new Carbon($to))->toDateTimeString() : null,
-            'base_cost' => '',
-            'unit_cost' => $amount,
-            'priority' => $priority,
+            'percentage' => $percentage,
+            'operator' => $operator,
+            'amount' => $amount,
         ]);
     }
 
@@ -224,19 +240,19 @@ trait Bookable
      * @param string $range
      * @param string $from
      * @param string $to
-     * @param int $percentage
+     * @param string $percentage
      *
-     * @return \Yanselmask\Bookings\Models\BookableBooking
+     * @return \Yanselmask\Bookings\Models\BookablePrice
      */
-    public function newPrice($range, $from, $to, $percentage): BookableBooking
+    public function newPrice($range, $from, $to, $percentage):  \Yanselmask\Bookings\Models\BookablePrice
     {
-        return $this->rates()->create([
+        return $this->prices()->create([
             'bookable_id' => static::getKey(),
             'bookable_type' => static::getMorphClass(),
             'range' => $range,
             'from' => (new Carbon($from))->toDateTimeString(),
             'to' => (new Carbon($to))->toDateTimeString(),
-            'base_cost' => $percentage
+            'percentage' => $percentage
         ]);
     }
 }

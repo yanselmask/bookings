@@ -9,7 +9,7 @@ use Rinvex\Support\Traits\ValidatingTrait;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class BookableRate extends Model
+class BookablePrice extends Model
 {
     use HasFactory;
     use ValidatingTrait;
@@ -20,9 +20,10 @@ class BookableRate extends Model
     protected $fillable = [
         'bookable_id',
         'bookable_type',
+        'range',
+        'from',
+        'to',
         'percentage',
-        'operator',
-        'amount',
     ];
 
     /**
@@ -31,9 +32,10 @@ class BookableRate extends Model
     protected $casts = [
         'bookable_id' => 'integer',
         'bookable_type' => 'string',
-        'percentage' => 'string',
-        'operator' => 'string',
-        'amount' => 'integer',
+        'range',
+        'from',
+        'to',
+        'percentage',
     ];
 
     /**
@@ -66,13 +68,14 @@ class BookableRate extends Model
      */
     public function __construct(array $attributes = [])
     {
-        $this->setTable(config('yanselmask.bookings.tables.bookable_rates'));
+        $this->setTable(config('yanselmask.bookings.tables.bookable_prices'));
         $this->mergeRules([
             'bookable_id' => 'required|integer',
             'bookable_type' => 'required|string|strip_tags|max:150',
+            'range' => 'required|in:datetimes,dates,months,weeks,days,times,sunday,monday,tuesday,wednesday,thursday,friday,saturday',
+            'from' => 'required|string|strip_tags|max:150',
+            'to' => 'required|string|strip_tags|max:150',
             'percentage' => 'required|string',
-            'operator' => 'required|string|strip_tags|max:150',
-            'amount' => 'required|integer',
         ]);
         parent::__construct($attributes);
     }
