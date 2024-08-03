@@ -31,9 +31,9 @@ class RollbackCommand extends Command
     {
         $this->alert($this->description);
 
-        $path = config('rinvex.bookings.autoload_migrations') ?
-            'vendor/rinvex/laravel-bookings/database/migrations' :
-            'database/migrations/rinvex/laravel-bookings';
+        $path = config('yanselmask.bookings.autoload_migrations') ?
+            'vendor/yanselmask/bookings/database/migrations' :
+            'database/migrations/yanselmask/bookings';
 
         if (file_exists($path)) {
             $this->call('migrate:reset', [

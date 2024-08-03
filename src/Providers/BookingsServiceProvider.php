@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Yanselmask\Bookings\Providers;
 
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\ServiceProvider;
 use Rinvex\Support\Traits\ConsoleTools;
-use Illuminate\Database\Schema\Blueprint;
 use Yanselmask\Bookings\Console\Commands\MigrateCommand;
 use Yanselmask\Bookings\Console\Commands\PublishCommand;
 use Yanselmask\Bookings\Console\Commands\RollbackCommand;

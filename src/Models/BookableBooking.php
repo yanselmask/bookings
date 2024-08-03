@@ -221,6 +221,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
         return $this->morphTo('customer', 'customer_type', 'customer_id', 'id');
     }
 
+
     /**
      * Get bookings of the given resource.
      *

@@ -20,7 +20,7 @@ class MigrateCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Migrate Yamselmask Bookings Tables.';
+    protected $description = 'Migrate Yanselmask Bookings Tables.';
 
     /**
      * Execute the console command.
