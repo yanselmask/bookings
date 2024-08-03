@@ -118,7 +118,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
         parent::boot();
 
         static::validating(function (self $bookableAvailability) {
-            if ($bookableAvailability->price === null) {
+            if (!$bookableAvailability->price) {
                 $formula = $bookableAvailability->calculatePrice(
                     $bookableAvailability->bookable,
                     $bookableAvailability->starts_at,
@@ -126,13 +126,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
                 );
                 $price = $formula['total_price'];
                 $currency = $formula['currency'];
-            }else{
+            } else {
                 $price = $bookableAvailability->price;
                 $formula = $bookableAvailability->formula;
                 $currency = $bookableAvailability->currency;
             }
             $bookableAvailability->currency = $currency;
-            $bookableAvailability->formula = $formula;
+            $bookableAvailability->formula = [$formula];
             $bookableAvailability->price = $price;
             $bookableAvailability->quantity = 1;
             $bookableAvailability->total_paid = 0;
