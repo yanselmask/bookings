@@ -9,7 +9,7 @@ use Rinvex\Support\Traits\ValidatingTrait;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-abstract class BookableRate extends Model
+class BookableRate extends Model
 {
     use HasFactory;
     use ValidatingTrait;
