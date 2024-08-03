@@ -32,10 +32,10 @@ class BookablePrice extends Model
     protected $casts = [
         'bookable_id' => 'integer',
         'bookable_type' => 'string',
-        'range',
-        'from',
-        'to',
-        'percentage',
+        'range'  => 'string',
+        'from' => 'string',
+        'to' => 'string',
+        'percentage' => 'string',
     ];
 
     /**
@@ -59,7 +59,7 @@ class BookablePrice extends Model
      *
      * @var bool
      */
-    protected $throwValidationExceptions = false;
+    protected $throwValidationExceptions = true;
 
     /**
      * Create a new Eloquent model instance.
