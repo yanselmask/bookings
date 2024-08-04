@@ -185,7 +185,7 @@ $serviceRate->make(['percentage' => '15', 'operator' => '^', 'amount' => 2])
 And here's the booking rate relations:
 
 ```php
-$bookable = $serviceRate->customer; // Get the owning resource model
+$bookable = $serviceRate->bookable; // Get the owning resource model
 ```
 
 > **Notes:**

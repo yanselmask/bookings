@@ -518,6 +518,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
                  'canceled_at' => $date ?? Carbon::now()->timestamp,
              ]);
          }
+
          return false;
      }
 
