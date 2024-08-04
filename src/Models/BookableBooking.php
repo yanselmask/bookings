@@ -504,4 +504,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
     {
         return ! $this->isCancelled() && Carbon::now()->between($this->starts_at, $this->ends_at);
     }
+
+     /**
+      * Cancel booking
+      *
+      * @return bool
+      */
+     public function toCancel($date): bool
+     {
+         if($this->bookable()->is_cancelable)
+         {
+             return $this->update([
+                 'canceled_at' => $date ?? Carbon::now()->timestamp,
+             ]);
+         }
+         return false;
+     }
+
 }

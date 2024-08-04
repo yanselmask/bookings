@@ -21,10 +21,7 @@ class BookableAvailability extends Model
         'bookable_id',
         'bookable_type',
         'range',
-        'from',
-        'to',
-        'is_bookable',
-        'priority',
+        'data',
     ];
 
     /**
@@ -34,10 +31,7 @@ class BookableAvailability extends Model
         'bookable_id' => 'integer',
         'bookable_type' => 'string',
         'range' => 'string',
-        'from' => 'string',
-        'to' => 'string',
-        'is_bookable' => 'boolean',
-        'priority' => 'integer',
+        'data' => 'array',
     ];
 
     /**
@@ -74,11 +68,8 @@ class BookableAvailability extends Model
         $this->mergeRules([
             'bookable_id' => 'required|integer',
             'bookable_type' => 'required|string|strip_tags|max:150',
-            'range' => 'required|in:datetimes,dates,months,weeks,days,times,sunday,monday,tuesday,wednesday,thursday,friday,saturday',
-            'from' => 'required|string|strip_tags|max:150',
-            'to' => 'required|string|strip_tags|max:150',
-            'is_bookable' => 'required|boolean',
-            'priority' => 'nullable|integer',
+            'range' => 'required|string|strip_tags|max:150',
+            'data' => 'required',
         ]);
 
         parent::__construct($attributes);

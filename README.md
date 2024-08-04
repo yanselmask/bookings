@@ -12,6 +12,11 @@
 - You may extend **Yanselmask Bookings** functionality to add features like: minimum and maximum units, and many more. These features may be supported natively sometime in the future.
 
 
+## Composer.json
+```json
+    "minimum-stability": "dev",
+    "prefer-stable": true
+```
 ## Installation
 
 1. Install the package via composer:
@@ -191,8 +196,8 @@ To create a custom price, follow these steps:
 
 ```php
 $room = \App\Models\Room::find(1);
-$room->newPrice('mon', '09:00:00', '17:00:00', '26'); // Increase pricing on Monday from 09:00 am to 05:00 pm by 26%
-$room->newPrice('wed', '11:30:00', '15:45:00', '-10.5'); // Decrease pricing on Wednesday from 11:30 am to 03:45 pm by 10.5%
+$room->newPrice('monday', '09:00:00', '17:00:00', '26'); // Increase pricing on Monday from 09:00 am to 05:00 pm by 26%
+$room->newPrice('wednesday', '11:30:00', '15:45:00', '-10.5'); // Decrease pricing on Wednesday from 11:30 am to 03:45 pm by 10.5%
 ```
 
 Piece of cake, right? You just set the day, from-to times, and the +/- percentage to increase/decrease your unit price.
@@ -207,6 +212,47 @@ $bookable = $room->bookable; // Get the owning resource model
 > - If you don't create any custom prices, then the resource will be booked at the default resource price.
 > - **Yanselmask Bookings** is intelegent enough to detect time format and convert if required, the above example show the explicitly correct format, but you still can write something like: '09:00 am' and it will be converted automatically for you.
 
+### Create a new custom Availability
+To create a custom availability, follow these steps:
+
+```php
+$room = \App\Models\Room::find(1);
+$room->newAvailability('monday', ['09:00-12:00', '13:00-18:00']); //Add the use at the top of each file where you want to use
+$room->availabilitiesRange($time = new DateTime('now')); // This will allow you to display things like 
+echo "It's open since ".$range->start()."\n";
+echo "It will close at ".$range->end()."\n";
+echo "It's closed since ".$openingHours->previousClose($now)->format('l H:i')."\n";
+echo "It will re-open at ".$openingHours->nextOpen($now)->format('l H:i')."\n";
+```
+> **Notes:**
+> - newAvailability($range, $data, $bookeable, $priority)
+> - string $range
+> - array $data
+> - bool $bookeable = true
+> - int $priority = 10
+
+**Functions**
+```php
+$room->AvailabilityIsOpenOn('monday'); //The object can be queried for a day in the week, which will return a result based on the regular schedule
+$room->AvailabilityIsOpenAt(new DateTime('2016-12-25')); //It can also be queried for a specific date and time
+$room->AvailabilityForDay(new DateTime('2016-12-25')); //OpeningHoursForDay object for the regular schedule
+$room->AvailabilityForWeek(); //OpeningHoursForDay[] for the regular schedule, keyed by day name
+$room->AvailabilityForWeekCombined(); //Array of day with same schedule for the regular schedule, keyed by day name, days combined by working hours
+$room->AvailabilityForDate(new DateTime('2016-12-25')); //OpeningHoursForDay object for a specific day
+$room->AvailabilityExceptions(); //OpeningHoursForDay object for a specific day
+$room->AvailabilityNextOpen($time); //It can also return the next open or close DateTime from a given DateTime
+$room->AvailabilityNextClose($time); //It can also return the next open or close DateTime from a given DateTime
+$room->AvailabilityIsClosedOn('sunday'); //Checks if the business is closed on a day in the regular schedule.
+$room->AvailabilityIsClosedAt(new DateTime('2016-12-25')); //Checks if the business is closed on a specific day, at a specific time.
+$room->AvailabilityIsClosed(); //Checks if the business is open right now.
+
+```
+```php
+$room = \App\Models\Room::find(1);
+$room->availabilities(); //All
+$room->availabilitiesBookable(); //Only bookable (is_bookable = true)
+$room->availabilitiesNotBookable(); //Only not bookable (is_bookable = false)
+```
 ### Query resource models
 
 You can query your resource models for further details, using the intuitive API as follows:
@@ -273,33 +319,13 @@ $customer->bookingsOf($room)->get(); // Get bookings by the customer for the giv
 
 Just like resource models, all the above properties and methods are actually relationships, so you can call the raw relation methods and chain like any normal Eloquent relationship. E.g. `$customer->bookings()->where('starts_at', '>', new \Carbon\Carbon())->first()`.
 
-
-**⚠️ Documentation not complete, the package is under developement, and some part may encounter refactoring! ⚠️**
-
-
-## Roadmap
-
-**Looking for contributors!**
-
-The following are a set of limitations to be improved, or feature requests that's looking for contributors to implement, all PRs are welcome 🙂
-
-- [ ] Add the ability to cancel bookings (#43)
-- [ ] Complete the bookable availability implementation, and document it (#32, #4)
-- [ ] Improve the documentation, and complete missing features, and add a workable example for each.
-
-
-## Changelog
-
-Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
-
-
 ## Support
 
 The following support channels are available at your fingertips:
 
-- [Chat on Slack](https://bit.ly/Yanselmask-slack)
+- [Chat on Discord](https://discord.gg/W8DMqBVm)
 - [Help on Email](mailto:help@yanselmask.com)
-- [Follow on Twitter](https://twitter.com/Yanselmask)
+- [Follow on Instagram](https://instagram.com/yanselmask)
 
 
 ## Contributing & Protocols
@@ -311,7 +337,7 @@ Bug reports, feature requests, and pull requests are very welcome.
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within this project, please send an e-mail to [help@Yanselmask.com](help@Yanselmask.com). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within this project, please send an e-mail to [help@yanselmask.com](help@yanselmask.com). All security vulnerabilities will be promptly addressed.
 
 
 ## About Yanselmask

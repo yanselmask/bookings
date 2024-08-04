@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yanselmask\Bookings\Traits;
 
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Yanselmask\Bookings\Models\BookableBooking;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -127,10 +128,25 @@ trait Bookable
     }
 
     /**
+     * Attach the given rates to the model.
+     *
+     * @param \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection|array $ids
+     * @param mixed $rates
+     *
+     * @return void
+     */
+    public function setPricesAttribute($prices): void
+    {
+        static::saved(function (self $model) use ($prices) {
+            $this->prices()->sync($prices);
+        });
+    }
+
+    /**
      * Attach the given availabilities to the model.
      *
      * @param \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection|array $ids
-     * @param mixed                                                                         $availabilities
+     * @param mixed $availabilities
      *
      * @return void
      */
@@ -170,7 +186,167 @@ trait Bookable
      */
     public function availabilities(): MorphMany
     {
-        return $this->morphMany(static::getAvailabilityModel(), 'bookable', 'bookable_type', 'bookable_id');
+        return $this->morphMany(static::getAvailabilityModel(), 'bookable', 'bookable_type', 'bookable_id')
+                    ->orderByDesc('priority');
+    }
+
+    /**
+     * The resource may have many availabilities.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function availabilitiesBookable(): MorphMany
+    {
+        return $this->availabilities()->where('is_bookable', true);
+    }
+
+    /**
+     * The resource may have many availabilities.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function availabilitiesNotBookable(): MorphMany
+    {
+        return $this->availabilities()->where('is_bookable', false);
+    }
+
+
+    public function openingHours()
+    {
+        $openingHours = $this->availabilitiesBookable()->get()
+                             ->flatMap(function($availabilitiesBookable) {
+                         return [$availabilitiesBookable->range => $availabilitiesBookable->data];
+                         })->toArray();
+        $hours =  \Spatie\OpeningHours\OpeningHours::create($openingHours);
+
+        return $hours;
+    }
+
+    /**
+     * This will allow you to display things like
+     * @param $time
+     * @return void
+     */
+
+    public function availabilitiesRange($time = null): void
+    {
+        if(!$time) {
+            $time = new DateTime('now');
+        }
+
+        $range = $this->openingHours()->currentOpenRange($time);
+
+        if ($range) {
+            echo "It's open since ".$range->start()."\n";
+            echo "It will close at ".$range->end()."\n";
+        } else {
+            echo "It's closed since ".$this->openingHours()->previousClose($time)->format('l H:i')."\n";
+            echo "It will re-open at ".$this->openingHours()->nextOpen($time)->format('l H:i')."\n";
+        }
+    }
+
+    /**
+     * The object can be queried for a day in the week, which will return a result based on the regular schedule
+     * @param $time
+     * @return bool
+     */
+    public function AvailabilityIsOpenOn($time): bool
+    {
+        return $this->openingHours()->isOpenOn($time);
+    }
+
+    /**
+     * It can also be queried for a specific date and time
+     * @param $time
+     * @return bool
+     */
+    public function AvailabilityIsOpenAt($time): bool
+    {
+        return $this->openingHours()->isOpenAt($time);
+    }
+    /**
+     * OpeningHoursForDay object for the regular schedule
+     * @param $time
+     * @return \Spatie\OpeningHours\OpeningHoursForDay
+     */
+    public function AvailabilityForDay($time): \Spatie\OpeningHours\OpeningHoursForDay
+    {
+        return $this->openingHours()->forDay($time);
+    }
+    /**
+     * OpeningHoursForDay[] for the regular schedule, keyed by day name
+     * @return array
+     */
+    public function AvailabilityForWeek(): array
+    {
+        return $this->openingHours()->forWeek();
+    }
+    /**
+     * Array of day with same schedule for the regular schedule, keyed by day name, days combined by working hours
+     * @return array
+     */
+    public function AvailabilityForWeekCombined(): array
+    {
+        return $this->openingHours()->forWeekCombined();
+    }
+    /**
+     * OpeningHoursForDay object for a specific day
+     * @param $time
+     * @return \Spatie\OpeningHours\OpeningHoursForDay
+     */
+    public function AvailabilityForDate($time): \Spatie\OpeningHours\OpeningHoursForDay
+    {
+        return $this->openingHours()->forDate($time);
+    }
+    /**
+     * OpeningHoursForDay object for a specific day
+     * @return array
+     */
+    public function AvailabilityExceptions(): array
+    {
+        return $this->openingHours()->exceptions();
+    }
+    /**
+     * It can also return the next open or close DateTime from a given DateTime
+     * @param $time
+     */
+    public function AvailabilityNextOpen($time)
+    {
+        return $this->openingHours()->nextOpen($time);
+    }
+    /**
+     * It can also return the next open or close DateTime from a given DateTime
+     * @param $time
+     */
+    public function AvailabilityNextClose($time)
+    {
+        return $this->openingHours()->nextClose($time);
+    }
+    /**
+     * Checks if the business is closed on a day in the regular schedule.
+     * @param $time
+     * @return bool
+     */
+    public function AvailabilityIsClosedOn($time): bool
+    {
+        return $this->openingHours()->isClosedOn($time);
+    }
+    /**
+     * Checks if the business is closed on a specific day, at a specific time.
+     * @param $time
+     * @return bool
+     */
+    public function AvailabilityIsClosedAt($time): bool
+    {
+        return $this->openingHours()->isClosedAt($time);
+    }
+    /**
+     * Checks if the business is open right now.
+     * @return bool
+     */
+    public function AvailabilityIsClosed(): bool
+    {
+        return $this->openingHours()->isClosed();
     }
 
     /**
@@ -211,6 +387,28 @@ trait Bookable
             'customer_type' => $customer->getMorphClass(),
             'starts_at' => (new Carbon($startsAt))->toDateTimeString(),
             'ends_at' => (new Carbon($endsAt))->toDateTimeString(),
+        ]);
+    }
+    /**
+     * Book the model for the given customer at the given dates with the given Availability.
+     *
+     * @param string $range
+     * @param string $from
+     * @param string $to
+     * @param bool $bookeable
+     * @param int $priority
+     *
+     * @return \Yanselmask\Bookings\Models\BookableAvailability
+     */
+    public function newAvailability(string $range, array $data, bool $bookeable = true, int $priority = 10):  \Yanselmask\Bookings\Models\BookableAvailability
+    {
+        return $this->availabilities()->create([
+            'bookable_id' => static::getKey(),
+            'bookable_type' => static::getMorphClass(),
+            'range' => $range,
+            'data' => $data,
+            'is_bookable' => $bookeable,
+            'priority' => $priority
         ]);
     }
 

@@ -40,7 +40,8 @@
         "spatie/eloquent-sortable": "^4.4.0",
         "spatie/laravel-schemaless-attributes": "^2.5.0",
         "spatie/laravel-sluggable": "^3.6.0",
-        "spatie/laravel-translatable": "^6.8.0"
+        "spatie/laravel-translatable": "^6.8.0",
+        "spatie/opening-hours": "^4.0"
     },
     "require-dev": {
         "codedungeon/phpunit-result-printer": "^0.32.0",
