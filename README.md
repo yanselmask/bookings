@@ -74,8 +74,12 @@ class Customer extends Model
     use HasBookings;
 }
 ```
-
 Again, that's all you need to do! Now your Customer model can book resources.
+
+### Add `$table->bookings` to your model bookable (Optional)
+```php
+   $table->bookings();
+```
 
 ### Create a new booking
 
