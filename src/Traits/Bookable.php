@@ -211,7 +211,7 @@ trait Bookable
     }
 
 
-    public function openingHours()
+    private function openingHours()
     {
         $openingHours = $this->availabilitiesBookable()->get()
                              ->flatMap(function($availabilitiesBookable) {
@@ -220,6 +220,11 @@ trait Bookable
         $hours =  \Spatie\OpeningHours\OpeningHours::create($openingHours);
 
         return $hours;
+    }
+
+    public function op()
+    {
+        return $this->openingHours();
     }
 
     /**

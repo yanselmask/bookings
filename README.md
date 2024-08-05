@@ -351,7 +351,8 @@ Yanselmask is a software solutions startup, specialized in integrated enterprise
 
 
 ## Credits
-[Rinvex](https://github.com/rinvex/laravel-bookings)
+- [Rinvex](https://github.com/rinvex/laravel-bookings)
+- [Yanselmask](https://yanselmask.com)
 
 ## License
 
